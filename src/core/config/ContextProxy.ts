@@ -15,6 +15,7 @@ import {
 	globalSettingsSchema,
 	isSecretStateKey,
 } from "../../schemas"
+import { DEFAULT_GLOBAL_STATE_VALUES, DEFAULT_SECRET_STATE_VALUES } from "../../schemas/defaults"
 import { logger } from "../../utils/logging"
 import { telemetryService } from "../../services/telemetry/TelemetryService"
 
@@ -54,15 +55,27 @@ export class ContextProxy {
 		for (const key of GLOBAL_STATE_KEYS) {
 			try {
 				// Revert to original assignment
-				this.stateCache[key] = this.originalContext.globalState.get(key)
+				// this.stateCache[key] = this.originalContext.globalState.get(key)
+				let value = this.originalContext.globalState.get(key)
+				if (value === undefined && DEFAULT_GLOBAL_STATE_VALUES[key] !== undefined) {
+					value = DEFAULT_GLOBAL_STATE_VALUES[key]
+					await this.originalContext.globalState.update(key, value)
+				}
+				// @ts-ignore
+				this.stateCache[key] = value
 			} catch (error) {
 				logger.error(`Error loading global ${key}: ${error instanceof Error ? error.message : String(error)}`)
 			}
 		}
-
 		const promises = SECRET_STATE_KEYS.map(async (key) => {
 			try {
-				this.secretCache[key] = await this.originalContext.secrets.get(key)
+				// this.secretCache[key] = await this.originalContext.secrets.get(key)
+				let secretValue = await this.originalContext.secrets.get(key)
+				if (secretValue === undefined && DEFAULT_SECRET_STATE_VALUES[key] !== undefined) {
+					secretValue = DEFAULT_SECRET_STATE_VALUES[key]
+					await this.originalContext.secrets.store(key, secretValue as string)
+				}
+				this.secretCache[key] = secretValue
 			} catch (error) {
 				logger.error(`Error loading secret ${key}: ${error instanceof Error ? error.message : String(error)}`)
 			}

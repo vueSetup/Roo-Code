@@ -115,7 +115,7 @@ const getCommandsMap = ({ context, outputChannel, provider }: RegisterCommandOpt
 
 			telemetryService.captureTitleButtonClicked("settings")
 
-			visibleProvider.postMessageToWebview({ type: "action", action: "settingsButtonClicked" })
+			visibleProvider.postMessageToWebview({ type: "action", action: "settingsButtonClicked", values: { section: "autoApprove" } })
 			// Also explicitly post the visibility message to trigger scroll reliably
 			visibleProvider.postMessageToWebview({ type: "action", action: "didBecomeVisible" })
 		},
