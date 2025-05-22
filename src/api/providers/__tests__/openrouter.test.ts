@@ -9,7 +9,7 @@ import { ApiHandlerOptions } from "../../../shared/api"
 // Mock dependencies
 jest.mock("openai")
 jest.mock("delay", () => jest.fn(() => Promise.resolve()))
-jest.mock("../fetchers/cache", () => ({
+jest.mock("../fetchers/modelCache", () => ({
 	getModels: jest.fn().mockImplementation(() => {
 		return Promise.resolve({
 			"anthropic/claude-3.7-sonnet": {
@@ -58,7 +58,7 @@ describe("OpenRouterHandler", () => {
 			baseURL: "https://openrouter.ai/api/v1",
 			apiKey: mockOptions.openRouterApiKey,
 			defaultHeaders: {
-				"HTTP-Referer": "https://github.com/RooVetGit/Roo-Cline",
+				"HTTP-Referer": "https://github.com/RooCodeInc/Roo-Cline",
 				"X-Title": "Roo Code",
 			},
 		})
@@ -78,7 +78,6 @@ describe("OpenRouterHandler", () => {
 				topP: undefined,
 				promptCache: {
 					supported: true,
-					optional: false,
 				},
 			})
 		})

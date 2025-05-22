@@ -8,7 +8,7 @@ import { ApiHandlerOptions } from "../../../shared/api"
 
 jest.mock("openai")
 jest.mock("delay", () => jest.fn(() => Promise.resolve()))
-jest.mock("../fetchers/cache", () => ({
+jest.mock("../fetchers/modelCache", () => ({
 	getModels: jest.fn().mockImplementation(() => {
 		return Promise.resolve({
 			"coding/claude-3-7-sonnet": {
@@ -43,7 +43,7 @@ describe("RequestyHandler", () => {
 			baseURL: "https://router.requesty.ai/v1",
 			apiKey: mockOptions.requestyApiKey,
 			defaultHeaders: {
-				"HTTP-Referer": "https://github.com/RooVetGit/Roo-Cline",
+				"HTTP-Referer": "https://github.com/RooCodeInc/Roo-Cline",
 				"X-Title": "Roo Code",
 			},
 		})
